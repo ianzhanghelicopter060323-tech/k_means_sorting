@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 
 def _save_and_show(fig: Figure, filename: str) -> None:
     """保存到 output/baseline，先保存再显示，关闭后释放画布。"""
-    output_dir = Path(__file__).resolve().parent.parent / 'output' / 'baseline'
+    output_dir = Path(__file__).resolve().parent.parent.parent / 'output' / 'baseline'
     output_dir.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
     fig.savefig(str(output_dir / filename), dpi=150, bbox_inches='tight')
