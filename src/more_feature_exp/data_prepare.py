@@ -9,7 +9,8 @@ from sklearn.preprocessing import StandardScaler
 def get_dataset() -> tuple[NDArray[np.float64], NDArray[np.int64]]:
     """读取 150 个鸢尾花样本；真实品种标签仅用于训练后的评价。"""
     X, y = datasets.load_iris(return_X_y=True)
-    return X, y
+    # 明确数组类型，避免第三方类型声明与实际返回值不一致造成误报。
+    return np.asarray(X, dtype=np.float64), np.asarray(y, dtype=np.int64)
 
 
 def select_features(

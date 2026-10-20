@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 
 def _save(fig: Figure, output_dir: Path, filename: str) -> None:
     """保存实验图片并释放画布，适用于无桌面环境的批量运行。"""
-    fig.savefig(output_dir / filename, dpi=150, bbox_inches='tight')
+    fig.savefig(str(output_dir / filename), dpi=150, bbox_inches='tight')
     plt.close(fig)
 
 

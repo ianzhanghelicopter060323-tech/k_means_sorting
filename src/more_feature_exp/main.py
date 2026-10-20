@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import csv
+from importlib.metadata import version
 import json
 from pathlib import Path
 import platform
 
-import matplotlib
 import numpy as np
 import scipy
 import sklearn
@@ -90,12 +90,16 @@ def run_experiments() -> None:
     save_csv(OUTPUT_DIR / 'summary.csv', summary)
     prediction_rows = []
     for index in range(len(y)):
-        row = {'sample_index': index, 'true_label': int(y[index])}
-        row.update({f'feature_{j}': float(X[index, j]) for j in range(4)})
+        # 预测记录同时包含整数标签和浮点特征，不能按纯整数字典推断。
+        prediction_row: dict[str, float] = {
+            'sample_index': index,
+            'true_label': int(y[index]),
+        }
+        prediction_row.update({f'feature_{j}': float(X[index, j]) for j in range(4)})
         for name in predictions:
-            row[f'{name}_cluster'] = int(predictions[name][index])
-            row[f'{name}_matched_label'] = int(matched_predictions[name][index])
-        prediction_rows.append(row)
+            prediction_row[f'{name}_cluster'] = int(predictions[name][index])
+            prediction_row[f'{name}_matched_label'] = int(matched_predictions[name][index])
+        prediction_rows.append(prediction_row)
     save_csv(OUTPUT_DIR / 'predictions_seed42.csv', prediction_rows)
 
     parameters = {
@@ -114,7 +118,7 @@ def run_experiments() -> None:
         'versions': {
             'python': platform.python_version(), 'numpy': np.__version__,
             'scipy': scipy.__version__, 'sklearn': sklearn.__version__,
-            'matplotlib': matplotlib.__version__,
+            'matplotlib': version('matplotlib'),
         },
     }
     (OUTPUT_DIR / 'parameters.json').write_text(
